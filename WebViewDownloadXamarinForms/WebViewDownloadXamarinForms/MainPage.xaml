@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WebViewDownloadXamarinForms.MainPage">
+
+    <StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <!--<Button Text="Go" Clicked="button_Clicked" />-->
+            <Entry x:Name="urlEntry" HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+        
+        <WebView x:Name="webView" 
+                 VerticalOptions="FillAndExpand" />
+        <!--Source="https://devblogs.microsoft.com/xamarin/"-->
+
+    </StackLayout>
+
+</ContentPage>

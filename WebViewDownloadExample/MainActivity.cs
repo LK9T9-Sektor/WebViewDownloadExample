@@ -9,18 +9,16 @@ using Android.Support.V7.App;
 using Android.Webkit;
 using Android.Widget;
 using Java.IO;
+using Shared;
 using System;
 using System.IO;
-using System.Net;
-using System.Net.Http;
 
 namespace WebViewDownloadExample
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, IDownloadListener
     {
-        // Рандомный сайт с картинками, где можно нажать кнопку "Скачать"
-        private const string _startPage = "https://unsplash.com/wallpapers";
+        private readonly Downloader _downloader = new Downloader();
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -39,7 +37,7 @@ namespace WebViewDownloadExample
             webSettings.AllowFileAccessFromFileURLs = true;
 
             webview.SetWebViewClient(new WebViewClient());
-            webview.LoadUrl(_startPage);
+            webview.LoadUrl(Downloader.StartPage);
 
             webview.SetDownloadListener(this);
         }
@@ -60,58 +58,53 @@ namespace WebViewDownloadExample
             else
             {
                 // С загрузкой через DownloadManager есть какие-то проблемы, воспользуемся обычным HttpClient'ом
-                Download(url);
+                try
+                {
+                    Toast.MakeText(ApplicationContext, $"Загрузка файла...", ToastLength.Long).Show();
+
+                    StartDownload(url);
+                }
+                catch (Exception ex)
+                {
+                    Toast.MakeText(ApplicationContext, $"Oops something goes wrong! {ex.Message}", ToastLength.Long).Show();
+                }
             }
         }
 
-        private async void Download(string url)
+        private async void StartDownload(string url)
         {
-            // Валидация https сертификатов отдельная тема...
-            ServicePointManager.ServerCertificateValidationCallback += (o, cert, chain, errors) => true;
-
-            try
+            var result = await _downloader.GetFile(url);
+            if (result != null)
             {
-                using var httpClient = new HttpClient();
-                using var response = await httpClient.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content;
-                    // Расширение файла, можно преобразовать из типа контента
-                    var contentType = content.Headers.ContentType;
-                    // Имя файла можно достать также из контента, но для этого сперва надо убрать все "спец символы"
-                    var filename = "123.jpg";
-                    var result = await content.ReadAsByteArrayAsync();
-
-                    var saveFolder = string.Empty;
-                    if (Android.OS.Environment.IsExternalStorageEmulated)
-                    {
-                        saveFolder = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath,
-                            Android.OS.Environment.DirectoryDownloads);
-                    }
-                    else
-                    {
-                        saveFolder = Android.OS.Environment.DirectoryDownloads;
-                    }
-
-                    var file = new Java.IO.File(saveFolder, filename);
-                    var outPutStream = new FileOutputStream(file);
-
-                    outPutStream.Write(result);
-                    outPutStream.Flush();
-                    outPutStream.Close();
-
-                    Toast.MakeText(ApplicationContext, $"Файл сохранён: {filename}", ToastLength.Long).Show();
-                }
-                else
-                {
-                    Toast.MakeText(ApplicationContext, $"{url} not loaded. Code: {response.StatusCode}", ToastLength.Long).Show();
-                }
+                Toast.MakeText(ApplicationContext, $"Загрузка файла завершена", ToastLength.Long).Show();
+                SaveFile(result);
             }
-            catch (Exception ex)
+        }
+
+
+        private async void SaveFile(byte[] content)
+        {
+            var filename = "322.jpg";
+
+            var saveFolder = string.Empty;
+            if (Android.OS.Environment.IsExternalStorageEmulated)
             {
-                Toast.MakeText(ApplicationContext, $"Oops something goes wrong! {ex.Message}", ToastLength.Long).Show();
+                saveFolder = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath,
+                    Android.OS.Environment.DirectoryDownloads);
             }
+            else
+            {
+                saveFolder = Android.OS.Environment.DirectoryDownloads;
+            }
+
+            var file = new Java.IO.File(saveFolder, filename);
+            var outPutStream = new FileOutputStream(file);
+
+            await outPutStream.WriteAsync(content);
+            outPutStream.Flush();
+            outPutStream.Close();
+
+            Toast.MakeText(ApplicationContext, $"Файл {filename} сохранён!", ToastLength.Long).Show();
         }
 
     }
