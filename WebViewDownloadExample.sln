@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebViewDownloadExample", "WebViewDownloadExample\WebViewDownloadExample.csproj", "{81D38B7A-3039-4D57-AF07-A6E84C65B680}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81D38B7A-3039-4D57-AF07-A6E84C65B680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D38B7A-3039-4D57-AF07-A6E84C65B680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81D38B7A-3039-4D57-AF07-A6E84C65B680}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{81D38B7A-3039-4D57-AF07-A6E84C65B680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81D38B7A-3039-4D57-AF07-A6E84C65B680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81D38B7A-3039-4D57-AF07-A6E84C65B680}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67C26891-AB3B-4C64-971A-DC30FF7C3E0C}
+	EndGlobalSection
+EndGlobal
